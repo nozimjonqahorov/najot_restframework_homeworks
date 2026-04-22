@@ -9,11 +9,14 @@ from django.shortcuts import get_object_or_404
 
 
 @api_view(["GET", "POST"])
-def phone_list_create(request):
+def phone_list_create_view(request):
     if request.method == "GET":
         phones = Phone.objects.all()
         serializer = PhoneSerializer(phones, many=True)
-        return Response(serializer.data)
+        return Response({
+            "status":status.HTTP_200_OK,
+            "data":serializer.data
+            })
     if request.method == "POST":
         serializer = PhoneSerializer(data = request.data)
         if serializer.is_valid():
@@ -23,7 +26,7 @@ def phone_list_create(request):
 
 
 @api_view(["GET", "PUT", "PATCH", "DELETE"])
-def phone_detail_update_delete(request, pk):
+def phone_detail_update_delete_view(request, pk):
     if request.method == "GET":
         phone = get_object_or_404(Phone, pk=pk)
         serializer = PhoneSerializer(phone)
