@@ -1,0 +1,30 @@
+$kind: http-request
+description: |-
+  Check the credentials and return the REST Token
+  if the credentials are valid and authenticated.
+  Calls Django Auth login method to register User ID
+  in Django session framework
+
+  Accept the following POST parameters: username, password
+  Return the REST Framework Token Object's key.
+url: "{{baseUrl}}/api/v1/dj-rest-auth/login/"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "password": "string",
+      "username": "string",
+      "email": "gY-G8@WPjyEFt.jw"
+    }
+auth:
+  type: apikey
+  credentials:
+    key: sessionid
+    value: "{{apiKey}}"
+    in: header
+examples: ./.resources/v1 dj rest auth login create.resources/examples
+order: 1000

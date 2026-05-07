@@ -1,0 +1,24 @@
+$kind: http-request
+description: |-
+  Resends another email to an unverified email.
+
+  Accepts the following POST parameter: email.
+url: "{{baseUrl}}/api/v1/dj-rest-auth/registration/resend-email/"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "VYpJKBA5cnz@Dlffsopnfk.ruae"
+    }
+auth:
+  type: apikey
+  credentials:
+    key: sessionid
+    value: "{{apiKey}}"
+    in: header
+examples: ./.resources/v1 dj rest auth registration resend email create.resources/examples
+order: 1000

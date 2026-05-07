@@ -1,0 +1,27 @@
+$kind: http-request
+description: |-
+  Registers a new user.
+
+  Accepts the following POST parameters: username, email, password1, password2.
+url: "{{baseUrl}}/api/v1/dj-rest-auth/registration/"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "SUYuma8E9B@vjaaojNcBcSJTxIBdfDutZvFmUJlboJ.jjgk",
+      "password1": "string",
+      "password2": "string",
+      "username": "string"
+    }
+auth:
+  type: apikey
+  credentials:
+    key: sessionid
+    value: "{{apiKey}}"
+    in: header
+examples: ./.resources/v1 dj rest auth registration create.resources/examples
+order: 3000
