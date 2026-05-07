@@ -1,0 +1,24 @@
+$kind: http-request
+description: |-
+  Verifies the email associated with the provided key.
+
+  Accepts the following POST parameter: key.
+url: "{{baseUrl}}/api/v1/dj-rest-auth/registration/verify-email/"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "key": "string"
+    }
+auth:
+  type: apikey
+  credentials:
+    key: sessionid
+    value: "{{apiKey}}"
+    in: header
+examples: ./.resources/v1 dj rest auth registration verify email create.resources/examples
+order: 1000

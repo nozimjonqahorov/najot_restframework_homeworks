@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/detail/:id/"
+method: GET
+pathVariables:
+  id: "7233"
+auth:
+  type: apikey
+  credentials:
+    key: sessionid
+    value: "{{apiKey}}"
+    in: header
+examples: ./.resources/v1 detail retrieve.resources/examples
+order: 1000
