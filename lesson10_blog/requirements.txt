@@ -1,0 +1,5 @@
+django>=6.0
+djangorestframework
+drf-spectacular
+celery>=5.4
+redis>=5.0

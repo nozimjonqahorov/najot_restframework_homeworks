@@ -1,0 +1,89 @@
+==========================================================
+  CELERY VA REDIS — LOYIHAGA QO'SHILGAN O'ZGARISHLAR
+==========================================================
+
+1. CELERY NIMA?
+---------------
+Celery — bu Python-dagi asinxron (parallel) task queue (vazifalar navbati).
+U katta hajmdagi ishlarni (email yuborish, fayl export, API chaqiruvlar)
+asosiy serverdan ajratib, backgroundda bajargani uchun ishlatiladi.
+
+2. REDIS NIMA?
+--------------
+Redis — bu yuqori tezlikdagi in-memory ma'lumotlar bazasi.
+Loyihada ikki maqsadda ishlatiladi:
+  a) Celery BROKER — Celeryga vazifalarni uzatish uchun oraliq (message broker)
+  b) Celery RESULT BACKEND — task natijalarini saqlash uchun
+
+
+3. QAYTERDA VA NIMA UCHUN QO'SHILDI?
+--------------------------------------
+
+Fayl                                    | Qayerda            | Nima uchun
+----------------------------------------|--------------------|----------------------------------
+config/celery.py                        | config/ papkasida  | Celery app ni yaratadi va
+                                        |                    | Django sozlamalarini yuklaydi.
+                                        |                    | autodiscover_tasks() orqali
+                                        |                    | barcha app'lardagi tasks.py
+                                        |                    | ni avtomatik topadi.
+
+config/__init__.py                      | config/ papkasida  | Django ishga tushganda Celery
+                                        |                    | app ni avtomatik yuklaydi.
+                                        |                    | __all__ orqali celery_app ni
+                                        |                    | tashqi importga ochadi.
+
+config/settings.py                      | settings faylida    | Celery sozlamalari qo'shildi:
+                                        |                    |   - CELERY_BROKER_URL: Redis
+                                        |                    |     manzili (localhost:6379/0)
+                                        |                    |   - CELERY_RESULT_BACKEND: Natijalar
+                                        |                    |     saqlanadigan joy
+                                        |                    |   - SERIALIZE: JSON formatda
+                                        |                    |     uzatiladi
+                                        |                    |   - TIMEZONE: UTC
+
+posts/tasks.py                          | posts/ papkasida   | Postlar uchun background vazifalar:
+                                        |                    |   - send_new_post_notification:
+                                        |                    |     Yangi post yaratilganda email
+                                        |                    |     yuborish
+                                        |                    |   - export_posts_to_csv:
+                                        |                    |     Postlarni CSV ga export qilish
+
+users/tasks.py                          | users/ papkasida   | Foydalanuvchilar uchun background
+                                        |                    | vazifalar:
+                                        |                    |   - send_welcome_email: Yangi userga
+                                        |                    |     xush kelibsiz emaili
+                                        |                    |   - check_premium_expiry: Premium
+                                        |                    |     muddati tugaganlarni tekshirish
+
+
+4. QANDAY ISHLAYDI?
+-------------------
+
+  Foydalanuvchi -> Django View -> Celery task ga vazifa beradi
+       |
+       v
+  Redis (Broker) -> Celery Worker vazifani oladi -> Bajaradi
+       |
+       v
+  Natija Redis (Result Backend) ga saqlanadi
+
+
+5. LOYIHA BOSQICHLARI
+---------------------
+
+  1) Redis serverni ishga tushiring:
+     redis-server
+
+  2) Celery worker ni ishga tushiring:
+     celery -A config worker --loglevel=info
+
+  3) Tasklarni chaqiring (misol):
+     from posts.tasks import send_new_post_notification
+     send_new_post_notification.delay(1, "Ali", "Django tutorial")
+
+
+6. QO'SHIMCHA O'RNATISH (pip)
+------------------------------
+  pip install celery redis
+
+==========================================================
